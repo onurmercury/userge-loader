@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+# download and extract plugin repository
+wget -q -O - https://github.com/UsergeTeam/Userge-Plugins/archive/master.tar.gz | tar xz
+
+# extract python package names to python-packages.txt
+find Userge-Plugins-master -name config.ini -exec grep packages {} \; | \
+sed 's/packages://g; /^$/d; s/ //; s/, /\n/g' | \
+sort -uf > python-packages.txt
+
+# exclude unavailable packages from python-packages.txt
+sed -i '
+
+  # deezloader
+  /TomyPrs\/deezloader/d
+
+  # covid
+  /covid/d
+
+  # music
+  /python-arq/d
+
+  # video_chat
+  /py-tgcalls/d; /youtube-search-python/d
+
+  # webss
+  /fake-headers/d; /^selenium$/d
+
+  ' python-packages.txt
+
+# install python packages
+pip install -Uqr python-packages.txt --no-cache-dir
+
+# remove temporary files
+rm -rf Userge-Plugins-master/ python-packages.txt

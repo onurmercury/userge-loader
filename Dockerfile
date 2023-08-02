@@ -1,58 +1,50 @@
-# set base image (host OS)
-FROM python:3.9
+# set base image
+FROM python:3.9-slim
 
-# set the working directory in the container
+# set working directory
 WORKDIR /app/
 
-RUN apt -qq update
-RUN apt -qq install -y --no-install-recommends \
-    curl \
-    git \
-    gnupg2 \
-    unzip \
-    wget \
-    ffmpeg
+# make debian container friendly
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NO_COLOR=1
 
-# install chrome
-RUN mkdir -p /tmp/ && \
-    cd /tmp/ && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    # -f ==> is required to --fix-missing-dependancies
-    dpkg -i ./google-chrome-stable_current_amd64.deb; apt -fqqy install && \
-    # clean up the container "layer", after we are done
-    rm ./google-chrome-stable_current_amd64.deb
+# make apt container friendly and enable non-free repos
+RUN echo '\
+APT::Get::Assume-Yes "1"; \n\
+APT::Install-Recommends "0"; \n\
+APT::Install-Suggests "0"; \n\
+Binary::apt::APT::Color "0"; \n\
+Binary::apt::DPkg::Progress-Fancy "0"; \n\
+Binary::apt::DPkg::Use-Pty "0"; \n\
+quiet "3";' > /etc/apt/apt.conf.d/999noninteractive && \
+\
+sed -i 's/Components: main/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
 
-# install chromedriver
-RUN mkdir -p /tmp/ && \
-    cd /tmp/ && \
-    wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip  && \
-    unzip /tmp/chromedriver.zip chromedriver -d /usr/bin/ && \
-    # clean up the container "layer", after we are done
-    rm /tmp/chromedriver.zip
+# install utilities
+RUN apt-get update && \
+    apt-get install \
+    zip unzip \
+    rar unrar \
+    curl wget \
+    git gnupg2 \
+    \
+    xz-utils && \
+    wget -q -O - https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz | tar xJ && \
+    install -Dm755 ffmpeg-git-*-amd64-static/ffmpeg /usr/local/bin/ffmpeg && \
+    install -Dm755 ffmpeg-git-*-amd64-static/ffprobe /usr/local/bin/ffprobe && \
+    rm -rf ffmpeg-git-*-amd64-static/ && \
+    apt-get purge xz-utils && \
+    \
+    rm -rf /var/lib/apt/lists/*
 
-ENV GOOGLE_CHROME_DRIVER /usr/bin/chromedriver
-ENV GOOGLE_CHROME_BIN /usr/bin/google-chrome-stable
-
-# install node-js
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs && \
-    npm i -g npm
-
-# install rar
-RUN mkdir -p /tmp/ && \
-    cd /tmp/ && \
-    wget -O /tmp/rarlinux.tar.gz http://www.rarlab.com/rar/rarlinux-x64-6.0.0.tar.gz && \
-    tar -xzvf rarlinux.tar.gz && \
-    cd rar && \
-    cp -v rar unrar /usr/bin/ && \
-    # clean up
-    rm -rf /tmp/rar*
-
-# copy the content of the local src directory to the working directory
+# copy source to working directory
 COPY . .
 
-# install dependencies
-RUN pip install -r requirements.txt
+# install python packages for userge
+RUN pip install -Uqr requirements.txt pip --no-cache-dir
 
-# command to run on container start
+# install python packages for userge plugins
+RUN bash ./instPkgs
+
+# command to start container
 CMD [ "bash", "./run" ]
