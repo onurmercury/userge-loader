@@ -41,7 +41,7 @@ RUN apt-get update && \
 COPY . .
 
 # install python packages for userge
-RUN pip install -Uqr requirements.txt pip --no-cache-dir
+RUN pip install -Ur requirements.txt pip --no-cache-dir
 
 # install python packages for userge plugins
 RUN bash ./instPkgs

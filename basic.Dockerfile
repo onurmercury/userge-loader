@@ -41,7 +41,7 @@ RUN apt-get update && \
 COPY . .
 
 # install python packages for userge
-RUN pip install -Uqr requirements.txt pip --no-cache-dir
+RUN pip install -Ur requirements.txt pip --no-cache-dir
 
 # command to start container
 CMD [ "bash", "./run" ]

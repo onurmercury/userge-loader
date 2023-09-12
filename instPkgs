@@ -30,7 +30,7 @@ sed -i '
   ' python-packages.txt
 
 # install python packages
-pip install -Uqr python-packages.txt --no-cache-dir
+pip install -Ur python-packages.txt --no-cache-dir
 
 # remove temporary files
 rm -rf Userge-Plugins-master/ python-packages.txt
