@@ -29,10 +29,10 @@ RUN apt-get update && \
     git gnupg2 \
     \
     xz-utils && \
-    wget -q -O - https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz | tar xJ && \
-    install -Dm755 ffmpeg-git-*-amd64-static/ffmpeg /usr/local/bin/ffmpeg && \
-    install -Dm755 ffmpeg-git-*-amd64-static/ffprobe /usr/local/bin/ffprobe && \
-    rm -rf ffmpeg-git-*-amd64-static/ && \
+    wget -q -O - https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ && \
+    install -Dm755 ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/ffmpeg && \
+    install -Dm755 ffmpeg-*-amd64-static/ffprobe /usr/local/bin/ffprobe && \
+    rm -rf ffmpeg-*-amd64-static/ && \
     apt-get purge xz-utils && \
     \
     rm -rf /var/lib/apt/lists/*
