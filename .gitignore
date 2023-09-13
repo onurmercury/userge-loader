@@ -144,3 +144,12 @@ logs/
 .rcache
 userge/*
 test.py
+
+# ffmpeg downloads
+ffmpeg-*-static.tar.xz
+ffmpeg-*-static/
+
+# plugin repo & plugins' python packages
+master.tar.gz
+Userge-Plugins-master/
+python-packages.txt
