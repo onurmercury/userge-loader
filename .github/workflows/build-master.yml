@@ -3,7 +3,7 @@ name: Build and Push - Master Branch
 on:
   workflow_dispatch:
   schedule:
-   - cron: "0 0 */3 * *"
+   - cron: "0 0 */10 * *"
   push:
     branches:
       - master
