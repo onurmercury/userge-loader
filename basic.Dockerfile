@@ -1,14 +1,15 @@
-# set base image
-FROM python:3.9-slim
+# set the base image
+FROM "python:3.9-slim"
 
-# set working directory
+# set the workdir
 WORKDIR /app/
 
-# make system container friendly
+# make the system container friendly
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NO_COLOR=1
 
-# make apt container friendly and enable non-free repos
+# make the apt container friendly
+# and enable non-free repos
 RUN echo '\
 APT::Get::Assume-Yes "1";\n\
 APT::Install-Recommends "0";\n\
@@ -37,11 +38,11 @@ RUN apt-get update && \
     \
     rm -rf /var/lib/apt/lists/*
 
-# copy source to working directory
+# copy source to workdir
 COPY . .
 
 # install python packages for userge
-RUN pip install -Ur requirements.txt pip --no-cache-dir
+RUN pip install -Ur requirements.txt --no-cache-dir
 
 # command to start container
 CMD [ "bash", "./run" ]

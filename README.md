@@ -1,25 +1,27 @@
-# Minimal Userge Loader
-A minimal and lightweight Userge loader as a Docker Hub image.
+# onurmercury's userge-loader fork
+A minimal & lightweight Userge loader.
 
 ## Differences from the upstream
-- Uses a slim variant of Debian Stable image as its base.
-- Node.js and Google Chrome are dropped.
-- Issues caused by Python package versions have been resolved.
-- Uses a static build of FFmpeg to drop X11 dependencies.
-- Comes with the Python packages required by official Userge plugins.
+- Provides the necessary Docker images (built with [GitHub Actions](https://github.com/onurmercury/userge-loader/actions/workflows/build-master.yml)) at [Docker Hub](https://hub.docker.com/r/onurmercury/userge-loader).
+- Uses Pyrofork instead of Pyrogram.
+- Uses a slim variant of Debian as its base.
+- Node.js and Google Chrome are not present.
+- PyPI package version issues are resolved.
+- Uses a static build of FFmpeg (to drop X11 dependencies).
+- Reduces the initial boot time by including the official Userge plugins packages.
 - Non-free APT repositories are enabled.
-- Base image and APT are now container-friendly (non-interactive).
+- Docker images are now container-friendly (non-interactive).
 
 ## Run the bot
 - Install the [Docker Engine & Docker Compose plugin](https://docs.docker.com/engine/install).
 - Download the [config_sample.env](https://github.com/onurmercury/userge-loader/blob/master/config_sample.env) and [docker-compose.yml](https://github.com/onurmercury/userge-loader/blob/master/docker-compose.yml) files to an empty folder.
 - Fill the `config_sample.env` and rename it as `config.env`.
 - Open a terminal shell inside that folder and run the following command: `docker compose up --build -d`
-- After deployment, send `.help` in Telegram to check if the bot is working.
+- Deployment is done, send `.help` in Telegram to check the bot.
 
 ### Useful commands
-- Add official Userge plugins to the bot: `.addrepo https://github.com/UsergeTeam/Userge-Plugins`
-- Check the logs: `docker compose logs -f -n 25`
+- Add official Userge plugins to the bot (in Telegram): `.addrepo https://github.com/UsergeTeam/Userge-Plugins`
+- Check the logs: `docker compose logs -f`
 - Check the status of the container: `docker compose ps -a`
 - Stop the container: `docker compose stop -t 0`
 - Start the container: `docker compose start`

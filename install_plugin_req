@@ -1,15 +1,17 @@
 #!/bin/bash
 set -e
 
-# download and extract plugin repository
-wget -q -O - https://github.com/UsergeTeam/Userge-Plugins/archive/master.tar.gz | tar xz
+commit="b6723d8a56a180290b687c458012879c49dd9c32"
 
-# extract python package names to python-packages.txt
-find Userge-Plugins-master -name config.ini -exec grep packages {} \; | \
+# download the plugin repository
+wget -q -O - https://github.com/UsergeTeam/Userge-Plugins/archive/"${commit}".tar.gz | tar xz
+
+# find the python packages
+find Userge-Plugins-"${commit}"/ -name config.ini -exec grep packages {} \; | \
 sed 's/packages://g; /^$/d; s/ //; s/, /\n/g' | \
 sort -uf > python-packages.txt
 
-# exclude unavailable packages from python-packages.txt
+# exclude unavailable/broken packages from python-packages.txt
 sed -i '
 
   # deezloader
@@ -29,8 +31,8 @@ sed -i '
 
   ' python-packages.txt
 
-# install python packages
+# install packages
 pip install -Ur python-packages.txt --no-cache-dir
 
 # remove temporary files
-rm -rf Userge-Plugins-master/ python-packages.txt
+rm -rf Userge-Plugins-"${commit}"/ python-packages.txt

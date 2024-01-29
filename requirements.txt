@@ -2,5 +2,5 @@ aiofiles
 dnspython==2.3.0
 gitpython
 motor
-pyrogram==2.0.58
+pyrofork
 python-dotenv
