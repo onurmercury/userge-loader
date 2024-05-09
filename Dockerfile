@@ -24,16 +24,16 @@ RUN set -eux; \
         rm -rf /var/lib/apt/lists/*; \
         \
         case "$TARGETPLATFORM" in \
-            "linux/amd64") ARCH="amd64" ;; \
-            "linux/386") ARCH="i686" ;; \
-            "linux/arm64") ARCH="arm64" ;; \
-            "linux/arm/v7") ARCH="armhf" ;; \
-            "linux/arm/v5") ARCH="armel" ;; \
+            "linux/amd64") arch="amd64" ;; \
+            "linux/386") arch="i686" ;; \
+            "linux/arm64") arch="arm64" ;; \
+            "linux/arm/v7") arch="armhf" ;; \
+            "linux/arm/v5") arch="armel" ;; \
         esac; \
-        curl -LSfs "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-$ARCH-static.tar.xz" | \
+        curl -LSfs "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-$arch-static.tar.xz" | \
             tar -xJC /usr/local/bin --no-same-owner --transform='s/.*\///' --wildcards \
-                ffmpeg-*-amd64-static/ffmpeg \
-                ffmpeg-*-amd64-static/ffprobe \
+                "ffmpeg-*-$arch-static/ffmpeg" \
+                "ffmpeg-*-$arch-static/ffprobe" \
         ; \
         apt-get purge --auto-remove xz-utils; \
         \

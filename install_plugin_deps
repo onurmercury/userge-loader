@@ -8,7 +8,7 @@ cd /tmp
 
 # download plugin repo
 curl -LSfs "https://github.com/UsergeTeam/Userge-Plugins/archive/$commit.tar.gz" |
-  tar -xz --strip-components=1 --wildcards Userge-Plugins-*/plugins/*/*/config.ini
+  tar -xz --strip-components=1 --wildcards "Userge-Plugins-$commit/plugins/*/*/config.ini"
 
 # remove excluded (broken/unavailable) plugins
 for i in "${excluded_plugins[@]}"; do
