@@ -1,9 +1,0 @@
-version: "3.9"
-
-services:
-  bot:
-    container_name: userge
-    image: onurmercury/userge-loader:latest
-    restart: on-failure
-    env_file:
-      - config.env

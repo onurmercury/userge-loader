@@ -1,58 +1,72 @@
-name: Build and Push - Master Branch
+name: Build and push - master branch
 
 on:
   workflow_dispatch:
   schedule:
-   - cron: "0 0 */10 * *"
+   - cron: "0 12 * * 0"
   push:
     branches:
       - master
 
 jobs:
-  master-build-latest:
+  master-latest:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build and Push
-        uses: docker/build-push-action@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v5
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/userge-loader:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/userge-loader:latest
+            ghcr.io/${{ github.repository_owner }}/userge-loader:latest
 
-  master-build-basic:
+  master-basic:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build and Push
-        uses: docker/build-push-action@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./basic.Dockerfile
+          file: ./Dockerfile.basic
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v5
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/userge-loader:basic
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/userge-loader:basic
+            ghcr.io/${{ github.repository_owner }}/userge-loader:basic

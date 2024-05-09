@@ -1,0 +1,11 @@
+services:
+  app:
+    container_name: userge
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: docker.io/onurmercury/userge-loader:latest
+#    image: ghcr.io/onurmercury/userge-loader:latest
+    restart: on-failure
+    env_file:
+      - config.env

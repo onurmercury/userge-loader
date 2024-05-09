@@ -39,6 +39,4 @@ RUN set -eux; \
         \
         pip install -Ur requirements.txt --no-cache-dir
 
-RUN bash ./install_plugin_deps
-
 CMD ["bash", "./run"]

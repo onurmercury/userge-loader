@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -eux
+
+commit="b6723d8a56a180290b687c458012879c49dd9c32"
+excluded_plugins=("misc/deezloader" "utils/covid" "utils/music" "utils/video_chat" "utils/webss")
+
+cd /tmp
+
+# download plugin repo
+curl -LSfs "https://github.com/UsergeTeam/Userge-Plugins/archive/$commit.tar.gz" |
+  tar -xz --strip-components=1 --wildcards Userge-Plugins-*/plugins/*/*/config.ini
+
+# remove excluded (broken/unavailable) plugins
+for i in "${excluded_plugins[@]}"; do
+  rm -rf "plugins/$i"
+done
+
+# grab and install pypi packages
+find plugins -name config.ini -type f -exec grep '^packages: ' {} \; |
+  sed 's/^packages: //; s/, /\n/g' |
+    sort -u |
+      xargs pip install -U --no-cache-dir
+
+# remove temp
+rm -rf plugins
