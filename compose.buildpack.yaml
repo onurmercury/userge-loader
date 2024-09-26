@@ -3,13 +3,11 @@ services:
     container_name: userge
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.buildpack
       target: with_plugins
       # target: basic
-    image: onurmercury/userge-loader:latest
-    # image: onurmercury/userge-loader:basic
+    image: onurmercury/userge-loader:buildpack
+    # image: onurmercury/userge-loader:buildpack-basic
     restart: on-failure
-    volumes:
-      - ./downloads:/app/downloads
     env_file:
       - config.env
