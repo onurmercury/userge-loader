@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS basic
+FROM python:3.9-slim-bookworm AS basic
 
 ARG TARGETPLATFORM
 
@@ -40,4 +40,4 @@ CMD ["sh", "./run"]
 
 FROM basic AS with_plugins
 
-RUN sh ./install_plugin_deps
+RUN bash ./install_plugin_deps
