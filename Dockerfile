@@ -38,6 +38,6 @@ RUN set -eux; \
 
 CMD ["sh", "./run"]
 
-FROM basic AS with_plugins
+FROM basic AS with_plugin_deps
 
 RUN bash ./install_plugin_deps
